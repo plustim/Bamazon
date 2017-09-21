@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/plustim/Bamazon#readme",
   "dependencies": {
+    "colors": "^1.1.2",
     "inquirer": "^3.3.0",
     "mysql": "^2.14.1"
   }

@@ -13,8 +13,10 @@ CREATE TABLE products(
 
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("GameBoy", "Electronics", 129.99, 6),
+("PlayStation", "Electronics", 110.99, 26),
 ("Yo-Yo", "Toys", 19.99, 100),
 ("Easy Bake Oven", "Toys", 95.99, 50),
+("Furby", "Toys", 39.99, 4),
 ("Pokemon Card Booster", "Toys", 7.99, 7);
 
 SELECT * FROM products;
