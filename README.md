@@ -1,5 +1,5 @@
 # Bamazon
-MySQL based CLI shop  
+Node MySQL based shop interface  
 [View the video demo](https://youtu.be/timVS3ZrsqA)
 
 ## Usage
