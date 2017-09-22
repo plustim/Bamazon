@@ -1,4 +1,6 @@
 # Bamazon
+MySQL based CLI shop interface  
+[View the video demo](https://youtu.be/timVS3ZrsqA)
 
 ## Usage
 ### Customer View (bamazonCustomer.js)
