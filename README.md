@@ -18,7 +18,7 @@ MySQL based CLI shop
 - Add a new product  
 ![add product](demo/5.png "Skip-Its seem cool with the kids this season.")  
 ![added product](demo/6.png "I really hope these sell.")  
-- Adding a new product with the same name as an existing product will try to resolve the conflict  
+- Adding a new product with the same name as an existing product will ask to combine the items  
 ![add existing](demo/7.png "Oh, I guess we already have these.")  
 
 ### Supervisor View (bamazonSupervisor.js)
