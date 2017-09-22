@@ -4,6 +4,14 @@ var mysql = require("mysql");
 var inquirer = require("inquirer");
 var colors = require('colors');
 
+var connection = mysql.createConnection({
+	host: "localhost",
+	port: 3306,
+	user: "root",
+	password: "password",
+	database : "bamazon"
+});
+
 var hr = "+----+--------------------------------+-----------------+---------+-------+";
 var titles = {
 	item_id: "#",
@@ -12,14 +20,6 @@ var titles = {
 	price: " Price",
 	stock_quantity: "Stock"
 };
-
-var connection = mysql.createConnection({
-	host: "localhost",
-	port: 3306,
-	user: "root",
-	password: "password",
-	database : "bamazon"
-});
    
 connection.connect(function(err) {
 	if (err) throw err;
@@ -29,7 +29,7 @@ connection.connect(function(err) {
 
 // my own function for outputting a formatted table because I want to do something a little more fancy
 function writeRow(row){	
-	return "| " + fillCell(row.item_id, 3) + "| " + fillCell(row.product_name, 30) + " | " + fillCell(row.department_name, 15) + " | $" + fillCell(row.price, 6) + " | " + fillCell(row.stock_quantity, 5) + " |"
+	return "| " + fillCell(row.item_id, 3) + "| " + fillCell(row.product_name, 30) + " | " + fillCell(row.department_name, 15) + " | $" + fillCell(row.price, 6) + " | " + fillCell(row.stock_quantity, 5) + " |";
 }
 
 // add trailing spaces to fill out table cell
@@ -108,7 +108,7 @@ var manager = {
 						var query = connection.query("UPDATE products SET stock_quantity=? WHERE item_id=?", [resItem[0].stock_quantity+parseInt(response.quantity), response.item],function(err, res) {
 							if(err) throw err;
 							console.log(response.quantity+" "+resItem[0].product_name+"s have been added to the stock. The total is now "+(resItem[0].stock_quantity+parseInt(response.quantity))+".");
-							manageStore();	
+							manageStore();
 						});
 					}else{
 						console.log("Unable to add stock to item. Please check if a product exists with id:"+response.item);
@@ -141,7 +141,6 @@ var manager = {
 		]).then(function(response){
 			connection.query("SELECT item_id FROM products WHERE product_name=?", response.product_name, function(err, resItem){
 				if(err) throw err;
-				console.log(response);
 				if(!resItem[0]){
 					var query = connection.query("INSERT INTO products SET ?", response, function(err, res) {
 						if(err) throw err;

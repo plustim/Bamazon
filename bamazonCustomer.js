@@ -3,15 +3,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 
-var hr = "+----+--------------------------------+-----------------+---------+-------+";
-var titles = {
-	item_id: "#",
-	product_name: "Product Name",
-	department_name: "Department",
-	price: " Price",
-	stock_quantity: "Stock"
-};
-
 var connection = mysql.createConnection({
 	host: "localhost",
 	port: 3306,
@@ -19,6 +10,16 @@ var connection = mysql.createConnection({
 	password: "password",
 	database : "bamazon"
 });
+
+var hr = "+----+--------------------------------+-----------------+---------+-------+";
+var inquirerHr = new inquirer.Separator(hr);
+var titles = {
+	item_id: "#",
+	product_name: "Product Name",
+	department_name: "Department",
+	price: " Price",
+	stock_quantity: "Stock"
+};
    
 connection.connect(function(err) {
 	if (err) throw err;
@@ -27,7 +28,7 @@ connection.connect(function(err) {
 
 // my own function for outputting a formatted table because I want to do something a little more fancy
 function writeRow(row){	
-	return "| " + fillCell(row.item_id, 3) + "| " + fillCell(row.product_name, 30) + " | " + fillCell(row.department_name, 15) + " | $" + fillCell(row.price, 6) + " | " + fillCell(row.stock_quantity, 5) + " |"
+	return "| " + fillCell(row.item_id, 3) + "| " + fillCell(row.product_name, 30) + " | " + fillCell(row.department_name, 15) + " | $" + fillCell(row.price, 6) + " | " + fillCell(row.stock_quantity, 5) + " |";
 }
 
 // add trailing spaces to fill out table cell
@@ -47,8 +48,9 @@ function buyItem(item){
 			message: "How many "+ item.product_name + "s would you like to buy?"
 		}
 	]).then(function(response){
+		response.quantity = parseInt(response.quantity);
 		if(response.quantity <= item.stock_quantity){
-			var query = connection.query("UPDATE products SET ? WHERE ?",[{stock_quantity: item.stock_quantity-response.quantity},{item_id: item.item_id}],function(err, res) {
+			var query = connection.query("UPDATE products SET stock_quantity=stock_quantity-?, product_sales=product_sales+? WHERE item_id=?",[response.quantity, item.price*response.quantity, item.item_id],function(err, res) {
 				if(err) throw err;
 				var total = response.quantity * item.price;
 				console.log("Your total comes out to $"+total+". Thank you for your purchase!");
@@ -73,11 +75,15 @@ function storeFront(){
 				short: "\n  "+writeRow(data)+"\n  "+hr
 			};
 		});
-		listAll.push({
-			name: hr+"\n   (Exit Store)",
-			value: "quit",
-			short: "\n  Thank you for visiting Bamazon. Please come again!"
-		});
+		listAll.push(
+			inquirerHr,
+			{
+				name: "   (Exit Store)",
+				value: "quit",
+				short: "\n  Thank you for visiting Bamazon. Please come again!"
+			},
+			inquirerHr
+		);
 
 		inquirer.prompt([
 			{	
